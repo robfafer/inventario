@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#172b46">
-  <meta name="description" content="Inventário simples de materiais, ferramentas e maquinários, com salvamento automático e exportação para Excel.">
+  <meta name="description" content="Inventário de materiais, ferramentas, maquinários e E.P.I., com marca, quantidades de novos e usados e exportação para Excel.">
   <title>Inventário da Empreiteira</title>
   <style>
     :root {
@@ -72,7 +72,7 @@
     .close { background: #f0f3f7; color: #42536d; border: 0; border-radius: 9px; width: 38px; height: 38px; font-size: 25px; line-height: 1; flex: none; }
     .label { display: block; color: #33435a; font-weight: 750; font-size: 13px; margin-bottom: 8px; }
     .required { color: #b32635; }
-    .type-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .type-choices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
     .type-choice { padding: 15px 8px; border: 2px solid var(--border); border-radius: 12px; background: white; text-align: center; font-weight: 750; color: #30415c; line-height: 1.35; }
     .type-choice .emoji { display: block; margin-bottom: 5px; font-size: 25px; }
     .type-choice[aria-pressed="true"] { border-color: var(--blue); background: #edf4ff; color: #134ba8; }
@@ -83,6 +83,11 @@
     .field input, .field select { width: 100%; height: 48px; border: 1px solid #cfd9e6; border-radius: 10px; padding: 10px 13px; background: #fff; color: var(--ink); font-size: 16px; }
     .field input::placeholder { color: #9ba4af; }
     .field__hint { color: var(--muted); font-size: 11px; margin: 5px 0 0; }
+    .qty-total-preview { grid-column: 1 / -1; margin-top: -8px; padding: 9px 12px; background: #edf4ff; color: #2b4d7f; border-radius: 9px; font-size: 13px; }
+    .qty-total-preview strong { color: #193b6f; }
+    .migration-notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 13px; margin-bottom: 16px; border-radius: 11px; background: #fff7e6; border: 1px solid #f2d79f; color: #694916; font-size: 12px; line-height: 1.45; }
+    .migration-notice button { padding: 8px 11px; background: white; border: 1px solid #d6ac58; border-radius: 8px; color: #684910; font-size: 12px; font-weight: 750; flex: none; }
+    .mobile-brand { display: none; }
     .editor__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 20px; }
     .editor__actions .button--danger { margin-left: auto; }
     .button--danger { color: #a61d2c; border-color: #f0cbd0; background: #fff5f6; }
@@ -93,19 +98,23 @@
     .section__header small { font-size: 12px; color: #65758b; text-align: right; }
     .table-scroll { width: 100%; }
     table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-    col.col-name { width: 67%; }
-    col.col-qty { width: 16%; }
-    col.col-actions { width: 17%; }
+    col.col-name { width: 32%; }
+    col.col-brand { width: 20%; }
+    col.col-new, col.col-used, col.col-total { width: 11%; }
+    col.col-actions { width: 15%; }
     thead { background: #f5f7fa; }
-    th { padding: 11px 18px; text-align: left; color: #566680; font-size: 12px; text-transform: uppercase; letter-spacing: .4px; font-weight: 800; }
-    th:nth-child(2), td:nth-child(2) { text-align: center; }
+    th { padding: 11px 12px; text-align: left; color: #566680; font-size: 11px; text-transform: uppercase; letter-spacing: .25px; font-weight: 800; }
+    th:nth-child(n+3):nth-child(-n+5), td:nth-child(n+3):nth-child(-n+5) { text-align: center; }
     th:last-child, td:last-child { text-align: right; }
     tbody tr { border-top: 1px solid #edf0f4; }
     tbody tr:first-child { border-top: 0; }
     tbody tr:hover { background: #fafcff; }
-    td { padding: 10px 18px; vertical-align: middle; font-size: 14px; }
-    .item-name { font-size: 14px; font-weight: 720; overflow-wrap: anywhere; }
-    .item-quantity { font-variant-numeric: tabular-nums; font-weight: 700; color: #354963; }
+    td { padding: 11px 12px; vertical-align: middle; font-size: 14px; }
+    .item-name { font-size: 14px; font-weight: 740; overflow-wrap: anywhere; }
+    .item-brand { font-size: 13px; color: #52637b; overflow-wrap: anywhere; }
+    .qty-value { font-variant-numeric: tabular-nums; font-weight: 730; color: #354963; }
+    .quantity-cell--total .qty-value { color: #124e9c; font-weight: 850; }
+    .qty-label { display: none; }
     .edit-button { min-height: 35px; padding: 7px 14px; border: 1px solid #c9d9f6; border-radius: 9px; background: #eef4ff; color: #1551b5; font-size: 13px; font-weight: 800; }
     .edit-button:hover { background: #e0edff; }
     .empty { padding: 53px 18px; display: grid; justify-items: center; gap: 10px; text-align: center; }
@@ -120,15 +129,19 @@
       .searchbox { grid-column: 1 / -1; }
       .button { white-space: normal; }
       .section__header { padding: 14px 16px; }
-      thead { display: none; }
-      col.col-name { width: 57%; }
-      col.col-qty { width: 20%; }
-      col.col-actions { width: 23%; }
-      td { padding: 10px 11px; }
-      td:first-child { padding-left: 16px; }
-      td:last-child { padding-right: 16px; }
-      .item-name { font-size: 14px; }
-      .item-quantity::before { content: "Qtd. "; color: var(--muted); font-size: 11px; font-weight: 500; }
+      thead, colgroup { display: none; }
+      table, tbody { display: block; width: 100%; table-layout: auto; }
+      tbody tr { display: grid; width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; grid-template-areas: "item item item action" "new used total action"; column-gap: 8px; row-gap: 4px; padding: 10px 13px; align-items: center; }
+      tbody td { display: block; padding: 0; min-width: 0; text-align: left !important; }
+      .item-cell { grid-area: item; }
+      .brand-cell { display: none; }
+      .quantity-cell--new { grid-area: new; }
+      .quantity-cell--used { grid-area: used; }
+      .quantity-cell--total { grid-area: total; }
+      .action-cell { grid-area: action; }
+      .mobile-brand { display: block; margin-top: 2px; font-size: 11px; color: #65758b; overflow-wrap: anywhere; }
+      .qty-label { display: block; color: #7c8797; font-size: 10px; font-weight: 650; line-height: 1.25; }
+      .qty-value { display: block; font-size: 13px; padding-top: 2px; }
       .edit-button { min-height: 36px; padding: 8px 12px; }
     }
     @media (max-width: 520px) {
@@ -151,23 +164,17 @@
       .modal__header { padding: 17px 16px 14px; }
       .modal__content { padding: 17px 16px 20px; }
       .modal__header h2 { font-size: 19px; }
-      .type-choices { gap: 6px; }
-      .type-choice { padding: 12px 4px; font-size: 12px; }
+      .type-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .type-choice { padding: 10px 5px; font-size: 13px; }
       .type-choice .emoji { font-size: 22px; }
       .fields-grid { gap: 12px 9px; }
       .editor__actions .button--danger { margin-left: 0; }
       .section__header h2 { font-size: 16px; }
       .section__header small { font-size: 11px; }
-      col.col-name { width: 54%; }
-      col.col-qty { width: 21%; }
-      col.col-actions { width: 25%; }
-      td { padding: 8px 6px; }
-      td:first-child { padding-left: 12px; }
-      td:last-child { padding-right: 12px; }
+      tbody tr { padding: 10px 12px; column-gap: 6px; }
       .item-name { font-size: 13.5px; }
-      .item-quantity { font-size: 13px; }
-      .item-quantity::before { display: block; line-height: 1.2; }
       .edit-button { padding: 7px 10px; font-size: 12px; }
+      .migration-notice { align-items: flex-start; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } }
   </style>
@@ -180,7 +187,7 @@
         <div>
           <p class="eyebrow">CONTROLE DE INVENTÁRIO</p>
           <h1>Inventário da Empreiteira</h1>
-          <p class="hero__description">Materiais, ferramentas e maquinários em um só lugar.</p>
+          <p class="hero__description">Materiais, ferramentas, maquinários e E.P.I. em um só lugar.</p>
         </div>
       </div>
       <div class="counter" aria-label="Total de itens cadastrados">
@@ -213,6 +220,11 @@
       <span><strong>Salvamento automático neste aparelho.</strong> Os itens permanecem disponíveis depois que o telefone é desligado.</span>
     </div>
 
+    <div class="migration-notice" id="migration-notice" hidden>
+      <span><strong>Atenção aos itens antigos:</strong> a quantidade da versão anterior foi colocada em “Novos”, para não perder a informação. Revise esses registros e ajuste os usados.</span>
+      <button type="button" id="dismiss-migration">Entendi</button>
+    </div>
+
     <section class="section" aria-labelledby="list-heading">
       <div class="section__header">
         <h2 id="list-heading">Itens catalogados</h2>
@@ -220,8 +232,8 @@
       </div>
       <div class="table-scroll" id="table-container">
         <table aria-label="Lista de itens cadastrados, com opção de editar" id="items-table">
-          <colgroup><col class="col-name"><col class="col-qty"><col class="col-actions"></colgroup>
-          <thead><tr><th scope="col">Item</th><th scope="col">Quantidade</th><th scope="col">Ação</th></tr></thead>
+          <colgroup><col class="col-name"><col class="col-brand"><col class="col-new"><col class="col-used"><col class="col-total"><col class="col-actions"></colgroup>
+          <thead><tr><th scope="col">Item</th><th scope="col">Marca</th><th scope="col">Novos</th><th scope="col">Usados</th><th scope="col">Total</th><th scope="col">Ação</th></tr></thead>
           <tbody id="items-body"></tbody>
         </table>
       </div>
@@ -231,7 +243,7 @@
         <p id="empty-description">Toque em “Adicionar item” para começar o levantamento.</p>
       </div>
     </section>
-    <p class="footer">Toque em <strong>Editar</strong> para alterar dados ou excluir um item. A planilha inclui <strong>todos os itens</strong> (mesmo com pesquisa ativa), data da última contagem/edição, valor unitário e valor total. Os dados ficam somente neste navegador, sem sincronização entre aparelhos. Baixe a planilha regularmente para ter uma cópia de segurança.</p>
+    <p class="footer">Toque em <strong>Editar</strong> para alterar dados ou excluir um item. A planilha inclui <strong>todos os itens</strong> (mesmo com pesquisa ativa), data da última contagem/edição, tipo, marca, quantidades de novos e usados, total, valor unitário e valor total. Os dados ficam somente neste navegador, sem sincronização entre aparelhos. Baixe a planilha regularmente para ter uma cópia de segurança.</p>
   </main>
   <div class="modal-overlay" id="modal-overlay" hidden>
     <section class="modal" id="editor" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description" tabindex="-1">
@@ -246,6 +258,7 @@
             <button type="button" class="type-choice" data-type="Material" aria-pressed="false"><span class="emoji" aria-hidden="true">🧱</span>Material</button>
             <button type="button" class="type-choice" data-type="Ferramenta" aria-pressed="false"><span class="emoji" aria-hidden="true">🛠️</span>Ferramenta</button>
             <button type="button" class="type-choice" data-type="Maquinário" aria-pressed="false"><span class="emoji" aria-hidden="true">🚜</span>Maquinário</button>
+            <button type="button" class="type-choice" data-type="E.P.I." aria-pressed="false"><span class="emoji" aria-hidden="true">🦺</span>E.P.I.</button>
           </div>
         </div>
         <form id="item-form" class="item-fields" hidden autocomplete="off">
@@ -256,21 +269,31 @@
                 <option value="Material">Material</option>
                 <option value="Ferramenta">Ferramenta</option>
                 <option value="Maquinário">Maquinário</option>
+                <option value="E.P.I.">E.P.I.</option>
               </select>
             </label>
             <label class="field field--full">
               <span class="label">Nome do item <span class="required">*</span></span>
               <input name="name" id="new-name" required maxlength="150" placeholder="Ex.: Cimento CP II">
             </label>
-            <label class="field">
-              <span class="label">Quantidade</span>
-              <input name="quantity" id="new-quantity" type="text" inputmode="decimal" placeholder="Ex.: 25" aria-describedby="quantity-hint">
-              <p class="field__hint" id="quantity-hint">Pode deixar vazio</p>
+            <label class="field field--full">
+              <span class="label">Marca (opcional)</span>
+              <input name="brand" id="new-brand" maxlength="100" placeholder="Ex.: Bosch, Vonder, 3M">
             </label>
             <label class="field">
+              <span class="label">Quantidade de novos</span>
+              <input name="quantityNew" id="new-quantity-new" type="text" inputmode="decimal" placeholder="Ex.: 10" aria-describedby="quantity-hint">
+            </label>
+            <label class="field">
+              <span class="label">Quantidade de usados</span>
+              <input name="quantityUsed" id="new-quantity-used" type="text" inputmode="decimal" placeholder="Ex.: 3" aria-describedby="quantity-hint">
+            </label>
+            <p class="field__hint field--full" id="quantity-hint">As duas quantidades são opcionais. Deixe vazio quando ainda não souber.</p>
+            <div class="qty-total-preview" aria-live="polite">Quantidade total: <strong id="preview-total">—</strong></div>
+            <label class="field field--full">
               <span class="label">Valor unitário (R$)</span>
               <input name="value" id="new-value" type="text" inputmode="decimal" placeholder="Ex.: 120,50" aria-describedby="value-hint">
-              <p class="field__hint" id="value-hint">Preço de uma unidade</p>
+              <p class="field__hint" id="value-hint">Preço de uma unidade, nova ou usada</p>
             </label>
           </div>
           <div class="editor__actions">
@@ -287,23 +310,30 @@
   <script>
     (() => {
       'use strict';
-      const STORAGE_KEY = 'inventario_empreiteira_v1';
-      const TYPES = ['Material', 'Ferramenta', 'Maquinário'];
+      const STORAGE_KEY = 'inventario_empreiteira_v1'; // Mesma chave das versões anteriores.
+      const MIGRATION_KEY = 'inventario_empreiteira_revisar_quantidades_v3';
+      const TYPES = ['Material', 'Ferramenta', 'Maquinário', 'E.P.I.'];
       const $ = id => document.getElementById(id);
       const ui = {
         search: $('search'), add: $('add-button'), download: $('download-button'),
-        editor: $('editor'), overlay: $('modal-overlay'), close: $('close-editor'), cancel: $('cancel-editor'), delete: $('delete-item'), save: $('save-item'), title: $('modal-title'), description: $('modal-description'), chooser: $('type-chooser'), editTypeWrapper: $('edit-type-wrapper'), editType: $('edit-type'),
-        choices: $('type-choices'), form: $('item-form'), name: $('new-name'),
-        quantity: $('new-quantity'), value: $('new-value'), body: $('items-body'),
+        editor: $('editor'), overlay: $('modal-overlay'), close: $('close-editor'),
+        cancel: $('cancel-editor'), delete: $('delete-item'), save: $('save-item'),
+        title: $('modal-title'), description: $('modal-description'),
+        chooser: $('type-chooser'), editTypeWrapper: $('edit-type-wrapper'), editType: $('edit-type'),
+        choices: $('type-choices'), form: $('item-form'), name: $('new-name'), brand: $('new-brand'),
+        quantityNew: $('new-quantity-new'), quantityUsed: $('new-quantity-used'),
+        quantityTotal: $('preview-total'), value: $('new-value'), body: $('items-body'),
         table: $('items-table'), empty: $('empty-state'), emptyTitle: $('empty-title'),
         emptyDescription: $('empty-description'), total: $('total-items'), visible: $('visible-count'),
-        notice: $('storage-notice'), toast: $('toast')
+        notice: $('storage-notice'), migration: $('migration-notice'),
+        dismissMigration: $('dismiss-migration'), toast: $('toast')
       };
       let items = [];
       let selectedType = null;
       let editingId = null;
       let priorFocus = null;
       let storageOk = true;
+      let didMigrate = false;
       let toastTimer = null;
       const numberFormat = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 3 });
       const moneyFormat = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -333,6 +363,14 @@
         if (!Number.isFinite(number) || number < 0 || number > 999999999999) return { ok: false };
         return { ok: true, value: number };
       }
+      function safeNumber(value) {
+        return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;
+      }
+      function quantityTotal(item) {
+        if (item.quantityNew == null && item.quantityUsed == null) return null;
+        // Evita erros de ponto flutuante como 0,1 + 0,2 = 0,30000000000000004.
+        return Math.round(((item.quantityNew ?? 0) + (item.quantityUsed ?? 0)) * 1000000) / 1000000;
+      }
       function showToast(message) {
         clearTimeout(toastTimer);
         ui.toast.textContent = message;
@@ -346,21 +384,34 @@
           ? '<span aria-hidden="true">✓</span><span><strong>Salvamento automático neste aparelho.</strong> Os itens permanecem disponíveis depois que o telefone é desligado.</span>'
           : '<span aria-hidden="true">⚠</span><span><strong>Atenção: não foi possível acessar os dados salvos.</strong> Evite o modo anônimo e verifique se o armazenamento do navegador está habilitado.</span>';
       }
+      function refreshMigrationNotice() {
+        try { ui.migration.hidden = localStorage.getItem(MIGRATION_KEY) !== '1'; }
+        catch (_) { ui.migration.hidden = true; }
+      }
       function load() {
         try {
+          didMigrate = false;
           const raw = localStorage.getItem(STORAGE_KEY);
           if (!raw) { setStorageStatus(true); return []; }
           const data = JSON.parse(raw);
           if (!Array.isArray(data)) throw new Error('Formato de dados inválido');
           setStorageStatus(true);
-          return data.filter(item => item && typeof item.id === 'string' && TYPES.includes(item.type) && typeof item.name === 'string').map(item => ({
-            id: item.id,
-            name: item.name,
-            type: item.type,
-            quantity: typeof item.quantity === 'number' && Number.isFinite(item.quantity) ? item.quantity : null,
-            value: typeof item.value === 'number' && Number.isFinite(item.value) ? item.value : null,
-            countDate: /^\d{4}-\d{2}-\d{2}$/.test(item.countDate || '') ? item.countDate : localDate()
-          }));
+          return data.filter(item => item && typeof item.id === 'string' && TYPES.includes(item.type) && typeof item.name === 'string').map(item => {
+            const isLegacy = !Object.prototype.hasOwnProperty.call(item, 'quantityNew') &&
+              !Object.prototype.hasOwnProperty.call(item, 'quantityUsed') &&
+              Object.prototype.hasOwnProperty.call(item, 'quantity');
+            if (isLegacy) didMigrate = true;
+            return {
+              id: item.id,
+              name: item.name,
+              type: item.type,
+              brand: typeof item.brand === 'string' ? item.brand : '',
+              quantityNew: safeNumber(isLegacy ? item.quantity : item.quantityNew),
+              quantityUsed: safeNumber(item.quantityUsed),
+              value: safeNumber(item.value),
+              countDate: /^\d{4}-\d{2}-\d{2}$/.test(item.countDate || '') ? item.countDate : localDate()
+            };
+          });
         } catch (error) {
           console.error('Erro ao carregar inventário:', error);
           setStorageStatus(false);
@@ -379,10 +430,22 @@
           return false;
         }
       }
-      function makeCell(label) {
+      function makeCell(label, className) {
         const td = document.createElement('td');
         td.dataset.label = label;
+        td.className = className;
         return td;
+      }
+      function quantityCell(label, value, className) {
+        const cell = makeCell(label, `quantity-cell ${className}`);
+        const caption = document.createElement('span');
+        caption.className = 'qty-label';
+        caption.textContent = label;
+        const data = document.createElement('span');
+        data.className = 'qty-value';
+        data.textContent = value == null ? '—' : numberFormat.format(value);
+        cell.append(caption, data);
+        return cell;
       }
       function render() {
         const query = normalize(ui.search.value.trim());
@@ -393,19 +456,26 @@
         for (const item of visible) {
           const tr = document.createElement('tr');
           tr.dataset.id = item.id;
-          const nameTd = makeCell('Item');
+          const nameTd = makeCell('Item', 'item-cell');
           const name = document.createElement('span');
           name.className = 'item-name';
           name.textContent = item.name;
-          nameTd.appendChild(name);
+          const mobileBrand = document.createElement('span');
+          mobileBrand.className = 'mobile-brand';
+          mobileBrand.textContent = item.brand ? `Marca: ${item.brand}` : '';
+          if (!item.brand) mobileBrand.hidden = true;
+          nameTd.append(name, mobileBrand);
           tr.appendChild(nameTd);
-          const qtyTd = makeCell('Quantidade');
-          const quantity = document.createElement('span');
-          quantity.className = 'item-quantity';
-          quantity.textContent = item.quantity == null ? '—' : numberFormat.format(item.quantity);
-          qtyTd.appendChild(quantity);
-          tr.appendChild(qtyTd);
-          const actionTd = makeCell('Ação');
+          const brandTd = makeCell('Marca', 'brand-cell');
+          const brand = document.createElement('span');
+          brand.className = 'item-brand';
+          brand.textContent = item.brand || '—';
+          brandTd.appendChild(brand);
+          tr.appendChild(brandTd);
+          tr.appendChild(quantityCell('Novos', item.quantityNew, 'quantity-cell--new'));
+          tr.appendChild(quantityCell('Usados', item.quantityUsed, 'quantity-cell--used'));
+          tr.appendChild(quantityCell('Total', quantityTotal(item), 'quantity-cell--total'));
+          const actionTd = makeCell('Ação', 'action-cell');
           const edit = document.createElement('button');
           edit.type = 'button';
           edit.className = 'edit-button';
@@ -431,6 +501,13 @@
         if (window.crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
         return `${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
       }
+      function refreshQuantityPreview() {
+        const newer = parseOptionalNumber(ui.quantityNew.value);
+        const used = parseOptionalNumber(ui.quantityUsed.value);
+        if (!newer.ok || !used.ok) { ui.quantityTotal.textContent = 'Verifique as quantidades'; return; }
+        const total = quantityTotal({ quantityNew: newer.value, quantityUsed: used.value });
+        ui.quantityTotal.textContent = total == null ? '—' : numberFormat.format(total);
+      }
       function openEditor(item = null) {
         priorFocus = document.activeElement;
         editingId = item ? item.id : null;
@@ -452,12 +529,15 @@
         if (item) {
           ui.editType.value = item.type;
           ui.name.value = item.name;
-          ui.quantity.value = item.quantity == null ? '' : numberFormat.format(item.quantity);
+          ui.brand.value = item.brand;
+          ui.quantityNew.value = item.quantityNew == null ? '' : numberFormat.format(item.quantityNew);
+          ui.quantityUsed.value = item.quantityUsed == null ? '' : numberFormat.format(item.quantityUsed);
           ui.value.value = item.value == null ? '' : moneyFormat.format(item.value);
           ui.name.focus({ preventScroll: true });
         } else {
           ui.choices.querySelector('[data-type]').focus({ preventScroll: true });
         }
+        refreshQuantityPreview();
       }
       function closeEditor() {
         if (ui.overlay.hidden) return;
@@ -477,13 +557,21 @@
       ui.add.addEventListener('click', () => openEditor());
       ui.close.addEventListener('click', closeEditor);
       ui.cancel.addEventListener('click', closeEditor);
+      ui.quantityNew.addEventListener('input', refreshQuantityPreview);
+      ui.quantityUsed.addEventListener('input', refreshQuantityPreview);
+      ui.dismissMigration.addEventListener('click', () => {
+        try { localStorage.removeItem(MIGRATION_KEY); } catch (_) {}
+        ui.migration.hidden = true;
+      });
       ui.choices.addEventListener('click', event => {
         const button = event.target.closest('button[data-type]');
         if (!button) return;
         selectedType = button.dataset.type;
-        ui.choices.querySelectorAll('[data-type]').forEach(option => option.setAttribute('aria-pressed', String(option === button)));
+        ui.editType.value = selectedType;
+        ui.chooser.hidden = true;
+        ui.editTypeWrapper.hidden = false;
         ui.form.hidden = false;
-        ui.description.textContent = 'Agora informe o nome; quantidade e valor unitário são opcionais.';
+        ui.description.textContent = 'Preencha os dados. Você pode mudar o tipo no primeiro campo.';
         ui.name.focus({ preventScroll: true });
       });
       document.addEventListener('keydown', event => {
@@ -503,25 +591,27 @@
       });
       ui.form.addEventListener('submit', event => {
         event.preventDefault();
-        const type = editingId ? ui.editType.value : selectedType;
+        const type = ui.editType.value;
         if (!TYPES.includes(type)) { showToast('Escolha o tipo do item.'); return; }
         const name = ui.name.value.trim();
+        const brand = ui.brand.value.trim();
         if (!name) { ui.name.focus(); showToast('Informe o nome do item.'); return; }
-        const qty = parseOptionalNumber(ui.quantity.value);
+        const newer = parseOptionalNumber(ui.quantityNew.value);
+        const used = parseOptionalNumber(ui.quantityUsed.value);
         const val = parseOptionalNumber(ui.value.value);
-        if (!qty.ok) { ui.quantity.focus(); showToast('Quantidade inválida. Use apenas números positivos.'); return; }
+        if (!newer.ok) { ui.quantityNew.focus(); showToast('Quantidade de novos inválida.'); return; }
+        if (!used.ok) { ui.quantityUsed.focus(); showToast('Quantidade de usados inválida.'); return; }
         if (!val.ok) { ui.value.focus(); showToast('Valor unitário inválido. Exemplo: 125,50'); return; }
+        const fields = { name, type, brand, quantityNew: newer.value, quantityUsed: used.value, value: val.value };
         let message;
         if (editingId) {
           const item = items.find(record => record.id === editingId);
           if (!item) { closeEditor(); render(); showToast('Este item já não existe.'); return; }
-          const modified = item.name !== name || item.type !== type || item.quantity !== qty.value || item.value !== val.value;
-          if (modified) {
-            Object.assign(item, { name, type, quantity: qty.value, value: val.value, countDate: localDate() });
-          }
+          const modified = Object.entries(fields).some(([key, value]) => item[key] !== value);
+          if (modified) Object.assign(item, fields, { countDate: localDate() });
           message = modified ? 'Alterações salvas!' : 'Nenhuma alteração necessária.';
         } else {
-          items.unshift({ id: newId(), name, type, quantity: qty.value, value: val.value, countDate: localDate() });
+          items.unshift({ id: newId(), ...fields, countDate: localDate() });
           ui.search.value = '';
           message = 'Item adicionado e salvo!';
         }
@@ -560,32 +650,46 @@
         return value == null || !Number.isFinite(value) ? '' : `<c r="${ref}" s="${style}"><v>${value}</v></c>`;
       }
       function workbookFiles() {
-        const headers = ['Data da contagem', 'Item', 'Tipo', 'Quantidade', 'Valor unitário', 'Valor total'];
-        let rows = `<row r="1" ht="28" customHeight="1">${headers.map((header, index) => stringCell(`${'ABCDEF'[index]}1`, header, 1)).join('')}</row>`;
+        const headers = [
+          'Data da contagem', 'Item', 'Tipo', 'Marca',
+          'Quantidade de novos', 'Quantidade de usados', 'Quantidade total',
+          'Valor unitário', 'Valor total'
+        ];
+        let rows = `<row r="1" ht="30" customHeight="1">${headers.map((header, index) => stringCell(`${'ABCDEFGHI'[index]}1`, header, 1)).join('')}</row>`;
         items.forEach((item, index) => {
           const row = index + 2;
+          const sum = quantityTotal(item);
+          const grandTotal = sum == null || item.value == null ? null : Math.round(sum * item.value * 100) / 100;
+          const formulaQty = `IF(COUNT(E${row}:F${row})=0,"",SUM(E${row}:F${row}))`;
+          const formulaValue = `IF(OR(G${row}="",H${row}=""),"",G${row}*H${row})`;
           rows += `<row r="${row}">` +
             numberCell(`A${row}`, serialDate(item.countDate), 2) +
             stringCell(`B${row}`, item.name) +
             stringCell(`C${row}`, item.type) +
-            numberCell(`D${row}`, item.quantity, 0) +
-            numberCell(`E${row}`, item.value, 3) +
-            `<c r="F${row}" s="3"><f>IF(OR(D${row}="",E${row}=""),"",D${row}*E${row})</f><v>${item.quantity == null || item.value == null ? '' : item.quantity * item.value}</v></c>` + '</row>';
+            stringCell(`D${row}`, item.brand) +
+            numberCell(`E${row}`, item.quantityNew, 4) +
+            numberCell(`F${row}`, item.quantityUsed, 4) +
+            `<c r="G${row}" s="4"><f>${formulaQty}</f><v>${sum == null ? '' : sum}</v></c>` +
+            numberCell(`H${row}`, item.value, 3) +
+            `<c r="I${row}" s="3"><f>${formulaValue}</f><v>${grandTotal == null ? '' : grandTotal}</v></c>` + '</row>';
         });
         const end = Math.max(items.length + 1, 1);
         const sheet = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
           `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">` +
-          `<dimension ref="A1:F${end}"/>` +
+          `<dimension ref="A1:I${end}"/>` +
           `<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>` +
-          `<sheetFormatPr defaultRowHeight="18"/>` +
-          `<cols><col min="1" max="1" width="22" customWidth="1"/><col min="2" max="2" width="43" customWidth="1"/>` +
-          `<col min="3" max="3" width="20" customWidth="1"/><col min="4" max="4" width="18" customWidth="1"/>` +
-          `<col min="5" max="5" width="22" customWidth="1"/><col min="6" max="6" width="22" customWidth="1"/></cols>` +
-          `<sheetData>${rows}</sheetData><autoFilter ref="A1:F${end}"/></worksheet>`;
+          `<sheetFormatPr defaultRowHeight="19"/>` +
+          `<cols><col min="1" max="1" width="21" customWidth="1"/><col min="2" max="2" width="42" customWidth="1"/>` +
+          `<col min="3" max="3" width="18" customWidth="1"/><col min="4" max="4" width="25" customWidth="1"/>` +
+          `<col min="5" max="5" width="23" customWidth="1"/><col min="6" max="6" width="23" customWidth="1"/>` +
+          `<col min="7" max="7" width="22" customWidth="1"/><col min="8" max="8" width="22" customWidth="1"/>` +
+          `<col min="9" max="9" width="22" customWidth="1"/></cols>` +
+          `<sheetData>${rows}</sheetData><autoFilter ref="A1:I${end}"/></worksheet>`;
         const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
           `<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">` +
-          `<numFmts count="2"><numFmt numFmtId="164" formatCode="dd/mm/yyyy"/>` +
-          `<numFmt numFmtId="165" formatCode="&quot;R$&quot; #,##0.00"/></numFmts>` +
+          `<numFmts count="3"><numFmt numFmtId="164" formatCode="dd/mm/yyyy"/>` +
+          `<numFmt numFmtId="165" formatCode="&quot;R$&quot; #,##0.00"/>` +
+          `<numFmt numFmtId="166" formatCode="#,##0.###"/></numFmts>` +
           `<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font>` +
           `<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font></fonts>` +
           `<fills count="3"><fill><patternFill patternType="none"/></fill>` +
@@ -593,11 +697,12 @@
           `<fill><patternFill patternType="solid"><fgColor rgb="FF203957"/><bgColor indexed="64"/></patternFill></fill></fills>` +
           `<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>` +
           `<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>` +
-          `<cellXfs count="4">` +
+          `<cellXfs count="5">` +
           `<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>` +
           `<xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/>` +
           `<xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>` +
           `<xf numFmtId="165" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>` +
+          `<xf numFmtId="166" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>` +
           `</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
         return [
           ['[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`],
@@ -696,6 +801,10 @@
         if (event.key === STORAGE_KEY) { items = load(); render(); showToast('Lista atualizada com alterações de outra aba.'); }
       });
       items = load();
+      if (didMigrate && persist()) {
+        try { localStorage.setItem(MIGRATION_KEY, '1'); } catch (_) {}
+      }
+      refreshMigrationNotice();
       render();
     })();
   </script>
