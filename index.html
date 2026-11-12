@@ -4,24 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#172b46">
-  <meta name="description" content="Inventário de materiais, ferramentas, maquinários e E.P.I., com marca, quantidades de novos e usados e exportação para Excel.">
+  <meta name="description" content="Inventário da empreiteira para materiais, ferramentas, maquinários, E.P.I. e E.P.C., com quantidades por condição e exportação para Excel.">
   <title>Inventário da Empreiteira</title>
   <style>
     :root {
       color-scheme: light;
-      --navy: #172b46;
-      --navy-mid: #263f5e;
-      --blue: #185ddd;
-      --blue-dark: #1149b0;
-      --yellow: #ffc85a;
-      --background: #f3f6fa;
-      --white: #fff;
-      --ink: #19283c;
-      --muted: #607087;
-      --border: #dce3ed;
-      --danger: #b32635;
-      --green: #137345;
-      --shadow: 0 10px 32px rgba(18, 43, 76, .065);
+      --navy: #172b46; --navy-mid: #263f5e; --blue: #185ddd; --blue-dark: #1149b0;
+      --yellow: #ffc85a; --background: #f3f6fa; --white: #fff; --ink: #19283c;
+      --muted: #607087; --border: #dce3ed; --danger: #b32635; --green: #137345;
+      --shadow: 0 10px 32px rgba(18,43,76,.065);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-synthesis: none;
     }
@@ -32,88 +23,83 @@
     button { cursor: pointer; touch-action: manipulation; }
     button:disabled { opacity: .55; cursor: not-allowed; }
     :focus-visible { outline: 3px solid #83aaf8; outline-offset: 2px; }
-    .shell { width: min(1130px, calc(100% - 32px)); margin-inline: auto; }
-    .hero { background: linear-gradient(120deg, #13243c, #263f5e); color: white; padding: 29px 0 34px; }
-    .hero__inner { display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+    .shell { width: min(1190px, calc(100% - 32px)); margin-inline: auto; }
+    .hero { background: linear-gradient(120deg,#13243c,#263f5e); color: #fff; padding: 27px 0 31px; }
+    .hero__inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
     .brand { display: flex; align-items: flex-start; gap: 15px; }
     .brand__icon { display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: 15px; background: var(--yellow); color: #172b46; font-size: 26px; }
     .eyebrow { margin: 1px 0 5px; color: #ffd57c; font-size: 11px; font-weight: 800; letter-spacing: 1.8px; }
-    h1 { margin: 0; font-size: clamp(23px, 3vw, 34px); line-height: 1.18; letter-spacing: -.7px; }
+    h1 { margin: 0; font-size: clamp(23px,3vw,34px); line-height: 1.18; letter-spacing: -.7px; }
     .hero__description { margin: 9px 0 0; color: #c8d5e8; font-size: 14px; line-height: 1.5; }
-    .counter { flex: none; display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: rgba(255, 255, 255, .09); border: 1px solid rgba(255,255,255,.15); border-radius: 16px; }
+    .counter { flex: none; display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.15); border-radius: 16px; }
     .counter__number { font-size: 30px; line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; }
     .counter__label { color: #c9d8ed; font-size: 12px; line-height: 1.3; }
     main { padding: 25px 0 45px; }
-    .toolbar { display: grid; grid-template-columns: minmax(200px, 1fr) auto auto; gap: 10px; align-items: center; margin-bottom: 17px; }
+    .toolbar { display: grid; grid-template-columns: minmax(200px,1fr) auto auto; gap: 10px; align-items: center; margin-bottom: 17px; }
     .searchbox { position: relative; }
     .searchbox__icon { position: absolute; inset: 0 auto 0 16px; display: flex; align-items: center; color: #677891; pointer-events: none; }
-    .searchbox input { display: block; width: 100%; height: 50px; padding: 0 16px 0 46px; border: 1px solid var(--border); border-radius: 12px; background: white; box-shadow: 0 2px 8px rgba(30,50,80,.035); outline-offset: 2px; }
+    .searchbox input { display: block; width: 100%; height: 50px; padding: 0 16px 0 46px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 2px 8px rgba(30,50,80,.035); }
     .searchbox input::placeholder { color: #7d8999; }
     .button { min-height: 50px; border-radius: 12px; border: 1px solid transparent; padding: 12px 18px; font-weight: 750; display: inline-flex; align-items: center; justify-content: center; gap: 9px; white-space: nowrap; transition: background .14s ease, transform .14s ease; }
     .button:active { transform: scale(.985); }
-    .button--primary { background: var(--blue); color: white; }
+    .button--primary { background: var(--blue); color: #fff; }
     .button--primary:hover { background: var(--blue-dark); }
-    .button--secondary { color: var(--navy); background: white; border-color: var(--border); }
+    .button--secondary { color: var(--navy); background: #fff; border-color: var(--border); }
     .button--secondary:hover { background: #edf3fb; }
     .button--success { color: #fff; background: var(--green); }
     .button--success:hover { background: #105d39; }
+    .button--danger { color: #a61d2c; background: #fff5f6; border-color: #f0cbd0; }
+    .button--danger:hover { background: #ffe5e9; }
     .button svg, .searchbox svg { width: 19px; height: 19px; flex: none; }
-    .notice { display: flex; align-items: center; gap: 9px; padding: 11px 14px; margin: 0 0 16px; border-radius: 12px; color: #315c49; background: #e7f5ed; border: 1px solid #c3e7d1; font-size: 13px; line-height: 1.5; }
-    .notice strong { font-weight: 750; }
+    .notice { display: flex; align-items: flex-start; gap: 9px; padding: 11px 14px; margin: 0 0 16px; border-radius: 12px; color: #315c49; background: #e7f5ed; border: 1px solid #c3e7d1; font-size: 13px; line-height: 1.5; }
     .notice--error { color: #8f202c; background: #fff0f0; border-color: #f3bec3; }
-    .notice[hidden], .empty[hidden] { display: none !important; }
     .modal-open { overflow: hidden; }
-    .modal-overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(8, 21, 39, .72); backdrop-filter: blur(3px); }
-    .modal { width: min(100%, 600px); max-height: min(90dvh, 820px); overflow-y: auto; overscroll-behavior: contain; background: #fff; border-radius: 20px; box-shadow: 0 28px 90px rgba(0, 0, 0, .3); }
-    .modal__header { position: sticky; top: 0; z-index: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 22px 23px 17px; background: #fff; border-bottom: 1px solid var(--border); }
-    .modal__content { padding: 22px 23px 24px; }
+    .modal-overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(8,21,39,.72); backdrop-filter: blur(3px); }
+    .modal { width: min(100%,630px); max-height: min(92dvh,900px); overflow-y: auto; overscroll-behavior: contain; background: #fff; border-radius: 20px; box-shadow: 0 28px 90px rgba(0,0,0,.3); }
+    .modal__header { position: sticky; top: 0; z-index: 2; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 23px 16px; background: #fff; border-bottom: 1px solid var(--border); }
+    .modal__content { padding: 20px 23px 24px; }
     h2 { margin: 0; font-size: 20px; line-height: 1.3; }
     .small-text { margin: 6px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
     .close { background: #f0f3f7; color: #42536d; border: 0; border-radius: 9px; width: 38px; height: 38px; font-size: 25px; line-height: 1; flex: none; }
     .label { display: block; color: #33435a; font-weight: 750; font-size: 13px; margin-bottom: 8px; }
     .required { color: #b32635; }
-    .type-choices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
-    .type-choice { padding: 15px 8px; border: 2px solid var(--border); border-radius: 12px; background: white; text-align: center; font-weight: 750; color: #30415c; line-height: 1.35; }
+    .type-choices { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; }
+    .type-choice { padding: 13px 8px; border: 2px solid var(--border); border-radius: 12px; background: #fff; text-align: center; font-weight: 750; color: #30415c; line-height: 1.35; }
     .type-choice .emoji { display: block; margin-bottom: 5px; font-size: 25px; }
     .type-choice[aria-pressed="true"] { border-color: var(--blue); background: #edf4ff; color: #134ba8; }
-    .item-fields { margin-top: 19px; }
-    .item-fields--add { border-top: 1px solid var(--border); padding-top: 19px; }
-    .fields-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px 12px; }
+    .item-fields { margin-top: 16px; }
+    .item-fields--add { border-top: 1px solid var(--border); padding-top: 16px; }
+    .fields-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 15px 12px; }
     .field--full { grid-column: 1 / -1; }
     .field input, .field select { width: 100%; height: 48px; border: 1px solid #cfd9e6; border-radius: 10px; padding: 10px 13px; background: #fff; color: var(--ink); font-size: 16px; }
     .field input::placeholder { color: #9ba4af; }
     .field__hint { color: var(--muted); font-size: 11px; margin: 5px 0 0; }
-    .qty-total-preview { grid-column: 1 / -1; margin-top: -8px; padding: 9px 12px; background: #edf4ff; color: #2b4d7f; border-radius: 9px; font-size: 13px; }
-    .qty-total-preview strong { color: #193b6f; }
-    .migration-notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 13px; margin-bottom: 16px; border-radius: 11px; background: #fff7e6; border: 1px solid #f2d79f; color: #694916; font-size: 12px; line-height: 1.45; }
-    .migration-notice button { padding: 8px 11px; background: white; border: 1px solid #d6ac58; border-radius: 8px; color: #684910; font-size: 12px; font-weight: 750; flex: none; }
-    .mobile-brand { display: none; }
+    .group-caption { grid-column: 1 / -1; margin-bottom: -6px; margin-top: 2px; font-size: 12px; font-weight: 800; color: #476078; text-transform: uppercase; letter-spacing: .45px; }
+    .qty-total-preview { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; background: #edf4ff; border-radius: 10px; padding: 12px 14px; }
+    .preview-label { display: block; color: #60718d; font-size: 11px; font-weight: 700; }
+    .preview-value { display: block; color: #1d4c91; font-size: 18px; font-variant-numeric: tabular-nums; font-weight: 850; margin-top: 2px; }
     .editor__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 20px; }
     .editor__actions .button--danger { margin-left: auto; }
-    .button--danger { color: #a61d2c; border-color: #f0cbd0; background: #fff5f6; }
-    .button--danger:hover { background: #ffe5e9; }
-    .section { background: white; border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; }
+    .section { background: #fff; border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; }
     .section__header { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 16px 21px; border-bottom: 1px solid var(--border); }
     .section__header h2 { font-size: 18px; }
     .section__header small { font-size: 12px; color: #65758b; text-align: right; }
-    .table-scroll { width: 100%; }
     table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-    col.col-name { width: 32%; }
-    col.col-brand { width: 20%; }
-    col.col-new, col.col-used, col.col-total { width: 11%; }
-    col.col-actions { width: 15%; }
+    col.col-name { width: 30%; }
+    col.col-count { width: 11.3%; }
+    col.col-action { width: 13.5%; }
     thead { background: #f5f7fa; }
-    th { padding: 11px 12px; text-align: left; color: #566680; font-size: 11px; text-transform: uppercase; letter-spacing: .25px; font-weight: 800; }
-    th:nth-child(n+3):nth-child(-n+5), td:nth-child(n+3):nth-child(-n+5) { text-align: center; }
-    th:last-child, td:last-child { text-align: right; }
+    th { padding: 12px 9px; text-align: left; color: #566680; font-size: 10.5px; text-transform: uppercase; letter-spacing: .15px; font-weight: 800; }
+    th:not(:first-child):not(:last-child),td:not(:first-child):not(:last-child) { text-align: center; }
+    th:last-child,td:last-child { text-align: right; }
     tbody tr { border-top: 1px solid #edf0f4; }
     tbody tr:first-child { border-top: 0; }
     tbody tr:hover { background: #fafcff; }
-    td { padding: 11px 12px; vertical-align: middle; font-size: 14px; }
+    td { padding: 11px 9px; vertical-align: middle; font-size: 14px; }
     .item-name { font-size: 14px; font-weight: 740; overflow-wrap: anywhere; }
-    .item-brand { font-size: 13px; color: #52637b; overflow-wrap: anywhere; }
     .qty-value { font-variant-numeric: tabular-nums; font-weight: 730; color: #354963; }
-    .quantity-cell--total .qty-value { color: #124e9c; font-weight: 850; }
+    .quantity-cell--gross .qty-value { color: #124e9c; font-weight: 850; }
+    .quantity-cell--active .qty-value { color: #0d7644; font-weight: 850; }
     .qty-label { display: none; }
     .edit-button { min-height: 35px; padding: 7px 14px; border: 1px solid #c9d9f6; border-radius: 9px; background: #eef4ff; color: #1551b5; font-size: 13px; font-weight: 800; }
     .edit-button:hover { background: #e0edff; }
@@ -122,27 +108,27 @@
     .empty h3 { margin: 2px 0 0; font-size: 17px; }
     .empty p { margin: 0; color: var(--muted); font-size: 14px; max-width: 360px; line-height: 1.55; }
     .footer { margin-top: 17px; color: #65748b; font-size: 12px; line-height: 1.65; }
-    .toast { position: fixed; z-index: 100; bottom: max(20px, env(safe-area-inset-bottom)); left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; padding: 12px 17px; border-radius: 12px; background: #1b344c; color: white; font-weight: 650; font-size: 14px; box-shadow: 0 12px 30px #11223935; transition: opacity .2s, transform .2s; max-width: calc(100% - 32px); text-align: center; }
-    .toast--show { opacity: 1; transform: translate(-50%, 0); }
-    @media (max-width: 780px) {
-      .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .toast { position: fixed; z-index: 100; bottom: max(20px, env(safe-area-inset-bottom)); left: 50%; transform: translate(-50%,20px); opacity: 0; pointer-events: none; padding: 12px 17px; border-radius: 12px; background: #1b344c; color: #fff; font-weight: 650; font-size: 14px; box-shadow: 0 12px 30px #11223935; transition: opacity .2s,transform .2s; max-width: calc(100% - 32px); text-align: center; }
+    .toast--show { opacity: 1; transform: translate(-50%,0); }
+    @media (max-width: 850px) {
+      .toolbar { grid-template-columns: repeat(2,minmax(0,1fr)); }
       .searchbox { grid-column: 1 / -1; }
       .button { white-space: normal; }
       .section__header { padding: 14px 16px; }
-      thead, colgroup { display: none; }
-      table, tbody { display: block; width: 100%; table-layout: auto; }
-      tbody tr { display: grid; width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; grid-template-areas: "item item item action" "new used total action"; column-gap: 8px; row-gap: 4px; padding: 10px 13px; align-items: center; }
+      thead,colgroup { display: none; }
+      table,tbody { display: block; width: 100%; table-layout: auto; }
+      tbody tr { display: grid; width: 100%; grid-template-columns: repeat(5,minmax(0,1fr)); grid-template-areas: "item item item item action" "new used repair gross active"; column-gap: 6px; row-gap: 8px; padding: 11px 12px 12px; align-items: center; }
       tbody td { display: block; padding: 0; min-width: 0; text-align: left !important; }
       .item-cell { grid-area: item; }
-      .brand-cell { display: none; }
       .quantity-cell--new { grid-area: new; }
       .quantity-cell--used { grid-area: used; }
-      .quantity-cell--total { grid-area: total; }
-      .action-cell { grid-area: action; }
-      .mobile-brand { display: block; margin-top: 2px; font-size: 11px; color: #65758b; overflow-wrap: anywhere; }
-      .qty-label { display: block; color: #7c8797; font-size: 10px; font-weight: 650; line-height: 1.25; }
-      .qty-value { display: block; font-size: 13px; padding-top: 2px; }
-      .edit-button { min-height: 36px; padding: 8px 12px; }
+      .quantity-cell--repair { grid-area: repair; }
+      .quantity-cell--gross { grid-area: gross; }
+      .quantity-cell--active { grid-area: active; }
+      .action-cell { grid-area: action; text-align: right !important; }
+      .qty-label { display: block; color: #7c8797; font-size: 10px; font-weight: 650; line-height: 1.2; white-space: normal; }
+      .qty-value { display: block; font-size: 13px; padding-top: 3px; }
+      .edit-button { min-height: 34px; padding: 7px 10px; }
     }
     @media (max-width: 520px) {
       .shell { width: calc(100% - 24px); }
@@ -164,19 +150,21 @@
       .modal__header { padding: 17px 16px 14px; }
       .modal__content { padding: 17px 16px 20px; }
       .modal__header h2 { font-size: 19px; }
-      .type-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .type-choices { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
       .type-choice { padding: 10px 5px; font-size: 13px; }
       .type-choice .emoji { font-size: 22px; }
       .fields-grid { gap: 12px 9px; }
+      .field__hint { line-height: 1.35; }
       .editor__actions .button--danger { margin-left: 0; }
       .section__header h2 { font-size: 16px; }
       .section__header small { font-size: 11px; }
-      tbody tr { padding: 10px 12px; column-gap: 6px; }
+      tbody tr { padding: 11px 10px; column-gap: 4px; }
       .item-name { font-size: 13.5px; }
-      .edit-button { padding: 7px 10px; font-size: 12px; }
-      .migration-notice { align-items: flex-start; }
+      .edit-button { padding: 7px 9px; font-size: 12px; }
+      .qty-label { font-size: 9px; }
+      .qty-value { font-size: 12.5px; }
     }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition: none !important; scroll-behavior: auto !important; } }
   </style>
 </head>
 <body>
@@ -187,12 +175,12 @@
         <div>
           <p class="eyebrow">CONTROLE DE INVENTÁRIO</p>
           <h1>Inventário da Empreiteira</h1>
-          <p class="hero__description">Materiais, ferramentas, maquinários e E.P.I. em um só lugar.</p>
+          <p class="hero__description">Materiais, ferramentas, maquinários, E.P.I. e E.P.C. em um só lugar.</p>
         </div>
       </div>
-      <div class="counter" aria-label="Total de itens cadastrados">
+      <div class="counter" aria-label="Total de tipos de itens cadastrados">
         <span class="counter__number" id="total-items">0</span>
-        <span class="counter__label">itens<br>cadastrados</span>
+        <span class="counter__label">itens<br>catalogados</span>
       </div>
     </div>
   </header>
@@ -200,51 +188,27 @@
   <main class="shell">
     <div class="toolbar">
       <label class="searchbox">
-        <span class="searchbox__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-        </span>
+        <span class="searchbox__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></span>
         <input id="search" type="search" placeholder="Pesquisar pelo nome do item..." aria-label="Pesquisar itens pelo nome" autocomplete="off">
       </label>
-      <button type="button" id="add-button" class="button button--primary" aria-haspopup="dialog" aria-controls="editor">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        Adicionar item
-      </button>
-      <button type="button" id="download-button" class="button button--secondary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-4-4 4 4 4-4"/><path d="M4 17v3h16v-3"/></svg>
-        Download planilha
-      </button>
+      <button type="button" id="add-button" class="button button--primary" aria-haspopup="dialog" aria-controls="editor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Adicionar item</button>
+      <button type="button" id="download-button" class="button button--secondary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-4-4 4 4-4"/><path d="M4 17v3h16v-3"/></svg>Download planilha</button>
     </div>
-
-    <div id="storage-notice" class="notice" role="status">
-      <span aria-hidden="true">✓</span>
-      <span><strong>Salvamento automático neste aparelho.</strong> Os itens permanecem disponíveis depois que o telefone é desligado.</span>
-    </div>
-
-    <div class="migration-notice" id="migration-notice" hidden>
-      <span><strong>Atenção aos itens antigos:</strong> a quantidade da versão anterior foi colocada em “Novos”, para não perder a informação. Revise esses registros e ajuste os usados.</span>
-      <button type="button" id="dismiss-migration">Entendi</button>
-    </div>
-
+    <div id="storage-notice" class="notice" role="status"><span aria-hidden="true">✓</span><span><strong>Salvamento automático neste aparelho.</strong> Os itens ficam disponíveis após desligar o telefone, enquanto os dados do navegador forem mantidos.</span></div>
     <section class="section" aria-labelledby="list-heading">
-      <div class="section__header">
-        <h2 id="list-heading">Itens catalogados</h2>
-        <small id="visible-count">0 itens</small>
-      </div>
-      <div class="table-scroll" id="table-container">
-        <table aria-label="Lista de itens cadastrados, com opção de editar" id="items-table">
-          <colgroup><col class="col-name"><col class="col-brand"><col class="col-new"><col class="col-used"><col class="col-total"><col class="col-actions"></colgroup>
-          <thead><tr><th scope="col">Item</th><th scope="col">Marca</th><th scope="col">Novos</th><th scope="col">Usados</th><th scope="col">Total</th><th scope="col">Ação</th></tr></thead>
-          <tbody id="items-body"></tbody>
-        </table>
-      </div>
+      <div class="section__header"><h2 id="list-heading">Itens catalogados</h2><small id="visible-count">0 itens</small></div>
+      <table aria-label="Lista de itens catalogados" id="items-table">
+        <colgroup><col class="col-name"><col class="col-count"><col class="col-count"><col class="col-count"><col class="col-count"><col class="col-count"><col class="col-action"></colgroup>
+        <thead><tr><th scope="col">Item</th><th scope="col">Novos</th><th scope="col">Usados</th><th scope="col">Reforma pendente</th><th scope="col">Total bruto</th><th scope="col">Total funcionando</th><th scope="col">Ação</th></tr></thead>
+        <tbody id="items-body"></tbody>
+      </table>
       <div class="empty" id="empty-state" hidden>
-        <span class="empty__icon" aria-hidden="true">📦</span>
-        <h3 id="empty-title">Nenhum item cadastrado</h3>
-        <p id="empty-description">Toque em “Adicionar item” para começar o levantamento.</p>
+        <span class="empty__icon" aria-hidden="true">📦</span><h3 id="empty-title">Nenhum item cadastrado</h3><p id="empty-description">Toque em “Adicionar item” para começar o levantamento.</p>
       </div>
     </section>
-    <p class="footer">Toque em <strong>Editar</strong> para alterar dados ou excluir um item. A planilha inclui <strong>todos os itens</strong> (mesmo com pesquisa ativa), data da última contagem/edição, tipo, marca, quantidades de novos e usados, total, valor unitário e valor total. Os dados ficam somente neste navegador, sem sincronização entre aparelhos. Baixe a planilha regularmente para ter uma cópia de segurança.</p>
+    <p class="footer"><strong>Total bruto:</strong> novos + usados + reforma pendente. <strong>Total funcionando:</strong> novos + usados. Na planilha, os itens em reforma usam o preço unitário de usado no valor bruto e ficam fora do valor total atual. A data da contagem aparece apenas no Excel e é atualizada quando um registro muda. <strong>Atenção:</strong> os dados ficam neste navegador, sem sincronização. Baixe a planilha regularmente para manter um backup.</p>
   </main>
+
   <div class="modal-overlay" id="modal-overlay" hidden>
     <section class="modal" id="editor" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description" tabindex="-1">
       <div class="modal__header">
@@ -259,42 +223,28 @@
             <button type="button" class="type-choice" data-type="Ferramenta" aria-pressed="false"><span class="emoji" aria-hidden="true">🛠️</span>Ferramenta</button>
             <button type="button" class="type-choice" data-type="Maquinário" aria-pressed="false"><span class="emoji" aria-hidden="true">🚜</span>Maquinário</button>
             <button type="button" class="type-choice" data-type="E.P.I." aria-pressed="false"><span class="emoji" aria-hidden="true">🦺</span>E.P.I.</button>
+            <button type="button" class="type-choice" data-type="E.P.C." aria-pressed="false"><span class="emoji" aria-hidden="true">🚧</span>E.P.C.</button>
           </div>
         </div>
         <form id="item-form" class="item-fields" hidden autocomplete="off">
           <div class="fields-grid">
             <label class="field field--full" id="edit-type-wrapper" hidden>
               <span class="label">Tipo do item <span class="required">*</span></span>
-              <select id="edit-type" name="type" required>
-                <option value="Material">Material</option>
-                <option value="Ferramenta">Ferramenta</option>
-                <option value="Maquinário">Maquinário</option>
-                <option value="E.P.I.">E.P.I.</option>
-              </select>
+              <select id="edit-type" name="type" required><option value="Material">Material</option><option value="Ferramenta">Ferramenta</option><option value="Maquinário">Maquinário</option><option value="E.P.I.">E.P.I.</option><option value="E.P.C.">E.P.C.</option></select>
             </label>
-            <label class="field field--full">
-              <span class="label">Nome do item <span class="required">*</span></span>
-              <input name="name" id="new-name" required maxlength="150" placeholder="Ex.: Cimento CP II">
-            </label>
-            <label class="field field--full">
-              <span class="label">Marca (opcional)</span>
-              <input name="brand" id="new-brand" maxlength="100" placeholder="Ex.: Bosch, Vonder, 3M">
-            </label>
-            <label class="field">
-              <span class="label">Quantidade de novos</span>
-              <input name="quantityNew" id="new-quantity-new" type="text" inputmode="decimal" placeholder="Ex.: 10" aria-describedby="quantity-hint">
-            </label>
-            <label class="field">
-              <span class="label">Quantidade de usados</span>
-              <input name="quantityUsed" id="new-quantity-used" type="text" inputmode="decimal" placeholder="Ex.: 3" aria-describedby="quantity-hint">
-            </label>
-            <p class="field__hint field--full" id="quantity-hint">As duas quantidades são opcionais. Deixe vazio quando ainda não souber.</p>
-            <div class="qty-total-preview" aria-live="polite">Quantidade total: <strong id="preview-total">—</strong></div>
-            <label class="field field--full">
-              <span class="label">Valor unitário (R$)</span>
-              <input name="value" id="new-value" type="text" inputmode="decimal" placeholder="Ex.: 120,50" aria-describedby="value-hint">
-              <p class="field__hint" id="value-hint">Preço de uma unidade, nova ou usada</p>
-            </label>
+            <label class="field field--full"><span class="label">Nome do item <span class="required">*</span></span><input name="name" id="item-name" required maxlength="150" placeholder="Ex.: Furadeira de impacto"></label>
+            <p class="group-caption">Quantidades</p>
+            <label class="field"><span class="label">Novos</span><input name="quantityNew" id="quantity-new" type="text" inputmode="decimal" placeholder="Ex.: 10"></label>
+            <label class="field"><span class="label">Usados</span><input name="quantityUsed" id="quantity-used" type="text" inputmode="decimal" placeholder="Ex.: 3"></label>
+            <label class="field field--full"><span class="label">Reforma pendente</span><input name="quantityRepair" id="quantity-repair" type="text" inputmode="decimal" placeholder="Ex.: 2"><p class="field__hint">Unidades que precisam de reforma e não estão funcionando.</p></label>
+            <div class="qty-total-preview" aria-live="polite">
+              <div><span class="preview-label">Total bruto</span><strong class="preview-value" id="preview-gross">—</strong></div>
+              <div><span class="preview-label">Total funcionando</span><strong class="preview-value" id="preview-active">—</strong></div>
+            </div>
+            <p class="group-caption">Preços unitários (opcionais)</p>
+            <label class="field"><span class="label">Novo (R$)</span><input name="priceNew" id="price-new" type="text" inputmode="decimal" placeholder="Ex.: 250,00"></label>
+            <label class="field"><span class="label">Usado (R$)</span><input name="priceUsed" id="price-used" type="text" inputmode="decimal" placeholder="Ex.: 120,00"></label>
+            <p class="field__hint field--full">O preço de usado também será aplicado às unidades com reforma pendente no valor bruto.</p>
           </div>
           <div class="editor__actions">
             <button type="submit" id="save-item" class="button button--success">Salvar item</button>
@@ -310,9 +260,9 @@
   <script>
     (() => {
       'use strict';
-      const STORAGE_KEY = 'inventario_empreiteira_v1'; // Mesma chave das versões anteriores.
-      const MIGRATION_KEY = 'inventario_empreiteira_revisar_quantidades_v3';
-      const TYPES = ['Material', 'Ferramenta', 'Maquinário', 'E.P.I.'];
+      // Banco independente das versões de avaliação anteriores.
+      const STORAGE_KEY = 'inventario_empreiteira_v4';
+      const TYPES = ['Material', 'Ferramenta', 'Maquinário', 'E.P.I.', 'E.P.C.'];
       const $ = id => document.getElementById(id);
       const ui = {
         search: $('search'), add: $('add-button'), download: $('download-button'),
@@ -320,397 +270,388 @@
         cancel: $('cancel-editor'), delete: $('delete-item'), save: $('save-item'),
         title: $('modal-title'), description: $('modal-description'),
         chooser: $('type-chooser'), editTypeWrapper: $('edit-type-wrapper'), editType: $('edit-type'),
-        choices: $('type-choices'), form: $('item-form'), name: $('new-name'), brand: $('new-brand'),
-        quantityNew: $('new-quantity-new'), quantityUsed: $('new-quantity-used'),
-        quantityTotal: $('preview-total'), value: $('new-value'), body: $('items-body'),
+        choices: $('type-choices'), form: $('item-form'), name: $('item-name'),
+        quantityNew: $('quantity-new'), quantityUsed: $('quantity-used'), quantityRepair: $('quantity-repair'),
+        totalGross: $('preview-gross'), totalActive: $('preview-active'),
+        priceNew: $('price-new'), priceUsed: $('price-used'), body: $('items-body'),
         table: $('items-table'), empty: $('empty-state'), emptyTitle: $('empty-title'),
         emptyDescription: $('empty-description'), total: $('total-items'), visible: $('visible-count'),
-        notice: $('storage-notice'), migration: $('migration-notice'),
-        dismissMigration: $('dismiss-migration'), toast: $('toast')
+        notice: $('storage-notice'), toast: $('toast')
       };
       let items = [];
-      let selectedType = null;
       let editingId = null;
       let priorFocus = null;
       let storageOk = true;
-      let didMigrate = false;
       let toastTimer = null;
       const numberFormat = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 3 });
       const moneyFormat = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
       function localDate() {
         const d = new Date();
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
       }
-      function normalize(str) {
-        return String(str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR');
+      function normalize(value) {
+        return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR');
       }
       function parseOptionalNumber(raw) {
         let text = String(raw ?? '').trim();
-        if (!text) return { ok: true, value: null };
-        text = text.replace(/^R\$\s*/i, '').replace(/\s/g, '');
-        if (!/^[0-9.,]+$/.test(text)) return { ok: false };
+        if (!text) return {ok: true, value: null};
+        text = text.replace(/^R\$\s*/i,'').replace(/\s/g,'');
+        if (!/^[0-9.,]+$/.test(text)) return {ok: false};
         if (text.includes(',')) {
-          if (!/^(?:\d{1,3}(?:\.\d{3})+|\d+)(?:,\d+)?$/.test(text)) return { ok: false };
-          text = text.replace(/\./g, '').replace(',', '.');
+          if (!/^(?:\d{1,3}(?:\.\d{3})+|\d+)(?:,\d+)?$/.test(text)) return {ok: false};
+          text = text.replace(/\./g,'').replace(',','.');
         } else if ((text.match(/\./g) || []).length > 1) {
-          if (!/^\d{1,3}(?:\.\d{3})+$/.test(text)) return { ok: false };
-          text = text.replace(/\./g, '');
+          if (!/^\d{1,3}(?:\.\d{3})+$/.test(text)) return {ok: false};
+          text = text.replace(/\./g,'');
         } else if (/^\d{1,3}\.\d{3}$/.test(text)) {
-          text = text.replace('.', '');
+          text = text.replace('.','');
         }
-        const number = Number(text);
-        if (!Number.isFinite(number) || number < 0 || number > 999999999999) return { ok: false };
-        return { ok: true, value: number };
+        const value = Number(text);
+        return Number.isFinite(value) && value >= 0 && value <= 999999999999 ? {ok: true, value} : {ok: false};
       }
       function safeNumber(value) {
         return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;
       }
-      function quantityTotal(item) {
-        if (item.quantityNew == null && item.quantityUsed == null) return null;
-        // Evita erros de ponto flutuante como 0,1 + 0,2 = 0,30000000000000004.
-        return Math.round(((item.quantityNew ?? 0) + (item.quantityUsed ?? 0)) * 1000000) / 1000000;
+      function hasQuantity(item) {
+        return item.quantityNew != null || item.quantityUsed != null || item.quantityRepair != null;
+      }
+      function roundQuantity(value) { return Math.round(value * 1000000) / 1000000; }
+      function quantityGross(item) {
+        if (!hasQuantity(item)) return null;
+        return roundQuantity((item.quantityNew ?? 0) + (item.quantityUsed ?? 0) + (item.quantityRepair ?? 0));
+      }
+      function quantityActive(item) {
+        if (!hasQuantity(item)) return null;
+        return roundQuantity((item.quantityNew ?? 0) + (item.quantityUsed ?? 0));
+      }
+      function valueTotal(item, includeRepair) {
+        if (!hasQuantity(item)) return null;
+        const newer = item.quantityNew ?? 0;
+        const used = item.quantityUsed ?? 0;
+        const repair = includeRepair ? (item.quantityRepair ?? 0) : 0;
+        if ((newer > 0 && item.priceNew == null) || ((used + repair) > 0 && item.priceUsed == null)) return null;
+        return Math.round((newer * (item.priceNew ?? 0) + (used + repair) * (item.priceUsed ?? 0)) * 100) / 100;
       }
       function showToast(message) {
         clearTimeout(toastTimer);
         ui.toast.textContent = message;
         ui.toast.classList.add('toast--show');
-        toastTimer = setTimeout(() => ui.toast.classList.remove('toast--show'), 2800);
+        toastTimer = setTimeout(() => ui.toast.classList.remove('toast--show'), 3000);
       }
       function setStorageStatus(ok) {
         storageOk = ok;
-        ui.notice.classList.toggle('notice--error', !ok);
+        ui.notice.classList.toggle('notice--error',!ok);
         ui.notice.innerHTML = ok
-          ? '<span aria-hidden="true">✓</span><span><strong>Salvamento automático neste aparelho.</strong> Os itens permanecem disponíveis depois que o telefone é desligado.</span>'
-          : '<span aria-hidden="true">⚠</span><span><strong>Atenção: não foi possível acessar os dados salvos.</strong> Evite o modo anônimo e verifique se o armazenamento do navegador está habilitado.</span>';
-      }
-      function refreshMigrationNotice() {
-        try { ui.migration.hidden = localStorage.getItem(MIGRATION_KEY) !== '1'; }
-        catch (_) { ui.migration.hidden = true; }
+          ? '<span aria-hidden="true">✓</span><span><strong>Salvamento automático neste aparelho.</strong> Os itens ficam disponíveis após desligar o telefone, enquanto os dados do navegador forem mantidos.</span>'
+          : '<span aria-hidden="true">⚠</span><span><strong>Atenção: não foi possível acessar ou salvar os dados neste navegador.</strong> Não conte com a persistência até resolver o problema. Evite o modo anônimo.</span>';
       }
       function load() {
         try {
-          didMigrate = false;
           const raw = localStorage.getItem(STORAGE_KEY);
-          if (!raw) { setStorageStatus(true); return []; }
+          if (!raw) {setStorageStatus(true); return [];}
           const data = JSON.parse(raw);
-          if (!Array.isArray(data)) throw new Error('Formato de dados inválido');
+          if (!Array.isArray(data)) throw new Error('Dados locais inválidos');
           setStorageStatus(true);
-          return data.filter(item => item && typeof item.id === 'string' && TYPES.includes(item.type) && typeof item.name === 'string').map(item => {
-            const isLegacy = !Object.prototype.hasOwnProperty.call(item, 'quantityNew') &&
-              !Object.prototype.hasOwnProperty.call(item, 'quantityUsed') &&
-              Object.prototype.hasOwnProperty.call(item, 'quantity');
-            if (isLegacy) didMigrate = true;
-            return {
-              id: item.id,
-              name: item.name,
-              type: item.type,
-              brand: typeof item.brand === 'string' ? item.brand : '',
-              quantityNew: safeNumber(isLegacy ? item.quantity : item.quantityNew),
-              quantityUsed: safeNumber(item.quantityUsed),
-              value: safeNumber(item.value),
-              countDate: /^\d{4}-\d{2}-\d{2}$/.test(item.countDate || '') ? item.countDate : localDate()
-            };
-          });
+          return data.filter(i => i && typeof i.id === 'string' && TYPES.includes(i.type) && typeof i.name === 'string').map(i => ({
+            id: i.id, name: i.name, type: i.type,
+            quantityNew: safeNumber(i.quantityNew), quantityUsed: safeNumber(i.quantityUsed),
+            quantityRepair: safeNumber(i.quantityRepair),
+            priceNew: safeNumber(i.priceNew), priceUsed: safeNumber(i.priceUsed),
+            countDate: /^\d{4}-\d{2}-\d{2}$/.test(i.countDate || '') ? i.countDate : localDate()
+          }));
         } catch (error) {
-          console.error('Erro ao carregar inventário:', error);
+          console.error('Erro ao carregar inventário',error);
           setStorageStatus(false);
           return [];
         }
       }
       function persist() {
-        if (!storageOk) return false;
+        if (!storageOk) {showToast('Armazenamento indisponível. Não foi possível salvar.'); return false;}
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
           return true;
-        } catch (error) {
-          console.error('Erro ao salvar inventário:', error);
+        } catch(error) {
+          console.error('Erro ao salvar inventário',error);
           setStorageStatus(false);
-          showToast('Não foi possível salvar. Verifique o armazenamento.');
+          showToast('Não foi possível salvar. Verifique o navegador.');
           return false;
         }
       }
-      function makeCell(label, className) {
+      function makeCell(label,cls) {
         const td = document.createElement('td');
         td.dataset.label = label;
-        td.className = className;
+        td.className = cls;
         return td;
       }
-      function quantityCell(label, value, className) {
-        const cell = makeCell(label, `quantity-cell ${className}`);
+      function quantityCell(label,value,cls,mobileLabel=label) {
+        const cell = makeCell(label,`quantity-cell ${cls}`);
         const caption = document.createElement('span');
-        caption.className = 'qty-label';
-        caption.textContent = label;
-        const data = document.createElement('span');
-        data.className = 'qty-value';
-        data.textContent = value == null ? '—' : numberFormat.format(value);
-        cell.append(caption, data);
+        caption.className='qty-label';
+        caption.textContent=mobileLabel;
+        const number=document.createElement('span');
+        number.className='qty-value';
+        number.textContent=value == null ? '—' : numberFormat.format(value);
+        cell.append(caption,number);
         return cell;
       }
       function render() {
         const query = normalize(ui.search.value.trim());
-        const visible = items.filter(item => normalize(item.name).includes(query));
+        const visible = items.filter(i => normalize(i.name).includes(query));
         ui.total.textContent = items.length;
         ui.visible.textContent = query ? `${visible.length} de ${items.length} itens` : `${items.length} ${items.length === 1 ? 'item' : 'itens'}`;
         const fragment = document.createDocumentFragment();
         for (const item of visible) {
           const tr = document.createElement('tr');
           tr.dataset.id = item.id;
-          const nameTd = makeCell('Item', 'item-cell');
+          const nameTd = makeCell('Item','item-cell');
           const name = document.createElement('span');
-          name.className = 'item-name';
-          name.textContent = item.name;
-          const mobileBrand = document.createElement('span');
-          mobileBrand.className = 'mobile-brand';
-          mobileBrand.textContent = item.brand ? `Marca: ${item.brand}` : '';
-          if (!item.brand) mobileBrand.hidden = true;
-          nameTd.append(name, mobileBrand);
+          name.className='item-name';
+          name.textContent=item.name;
+          nameTd.appendChild(name);
           tr.appendChild(nameTd);
-          const brandTd = makeCell('Marca', 'brand-cell');
-          const brand = document.createElement('span');
-          brand.className = 'item-brand';
-          brand.textContent = item.brand || '—';
-          brandTd.appendChild(brand);
-          tr.appendChild(brandTd);
-          tr.appendChild(quantityCell('Novos', item.quantityNew, 'quantity-cell--new'));
-          tr.appendChild(quantityCell('Usados', item.quantityUsed, 'quantity-cell--used'));
-          tr.appendChild(quantityCell('Total', quantityTotal(item), 'quantity-cell--total'));
-          const actionTd = makeCell('Ação', 'action-cell');
+          tr.appendChild(quantityCell('Novos',item.quantityNew,'quantity-cell--new'));
+          tr.appendChild(quantityCell('Usados',item.quantityUsed,'quantity-cell--used'));
+          tr.appendChild(quantityCell('Reforma pendente',item.quantityRepair,'quantity-cell--repair','Reforma'));
+          tr.appendChild(quantityCell('Total bruto',quantityGross(item),'quantity-cell--gross','Bruto'));
+          tr.appendChild(quantityCell('Total funcionando',quantityActive(item),'quantity-cell--active','Func.'));
+          const actionTd = makeCell('Ação','action-cell');
           const edit = document.createElement('button');
           edit.type = 'button';
           edit.className = 'edit-button';
           edit.textContent = 'Editar';
-          edit.setAttribute('aria-label', `Editar ${item.name}`);
-          edit.addEventListener('click', () => openEditor(item));
+          edit.setAttribute('aria-label',`Editar ${item.name}`);
+          edit.addEventListener('click',()=>openEditor(item));
           actionTd.appendChild(edit);
           tr.appendChild(actionTd);
           fragment.appendChild(tr);
         }
         ui.body.replaceChildren(fragment);
-        const hasVisible = visible.length > 0;
-        ui.table.hidden = !hasVisible;
-        ui.empty.hidden = hasVisible;
-        if (!hasVisible) {
-          ui.emptyTitle.textContent = items.length ? 'Nenhum resultado encontrado' : 'Nenhum item cadastrado';
-          ui.emptyDescription.textContent = items.length
-            ? 'Tente pesquisar usando outra parte do nome do item.'
-            : 'Toque em “Adicionar item” para começar o levantamento.';
+        const hasVisible=visible.length > 0;
+        ui.table.hidden=!hasVisible;
+        ui.empty.hidden=hasVisible;
+        if(!hasVisible) {
+          ui.emptyTitle.textContent=items.length ? 'Nenhum resultado encontrado' : 'Nenhum item cadastrado';
+          ui.emptyDescription.textContent=items.length ? 'Tente outra parte do nome do item.' : 'Toque em “Adicionar item” para começar o levantamento.';
         }
       }
       function newId() {
-        if (window.crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
-        return `${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+        if (window.crypto && typeof crypto.randomUUID==='function') return crypto.randomUUID();
+        return `${Date.now()}-${Math.random().toString(36).slice(2,12)}`;
       }
       function refreshQuantityPreview() {
-        const newer = parseOptionalNumber(ui.quantityNew.value);
-        const used = parseOptionalNumber(ui.quantityUsed.value);
-        if (!newer.ok || !used.ok) { ui.quantityTotal.textContent = 'Verifique as quantidades'; return; }
-        const total = quantityTotal({ quantityNew: newer.value, quantityUsed: used.value });
-        ui.quantityTotal.textContent = total == null ? '—' : numberFormat.format(total);
+        const newer=parseOptionalNumber(ui.quantityNew.value);
+        const used=parseOptionalNumber(ui.quantityUsed.value);
+        const repair=parseOptionalNumber(ui.quantityRepair.value);
+        if(!newer.ok || !used.ok || !repair.ok) {
+          ui.totalGross.textContent='Verifique'; ui.totalActive.textContent='Verifique'; return;
+        }
+        const record={quantityNew:newer.value,quantityUsed:used.value,quantityRepair:repair.value};
+        const gross=quantityGross(record), active=quantityActive(record);
+        ui.totalGross.textContent=gross == null ? '—' : numberFormat.format(gross);
+        ui.totalActive.textContent=active == null ? '—' : numberFormat.format(active);
       }
-      function openEditor(item = null) {
-        priorFocus = document.activeElement;
-        editingId = item ? item.id : null;
-        selectedType = item ? item.type : null;
+      function openEditor(item=null) {
+        priorFocus=document.activeElement;
+        editingId=item ? item.id : null;
         ui.form.reset();
-        ui.overlay.hidden = false;
+        ui.overlay.hidden=false;
         document.body.classList.add('modal-open');
-        document.querySelector('body > header').inert = true;
-        document.querySelector('body > main').inert = true;
-        ui.title.textContent = item ? 'Editar item' : 'Adicionar novo item';
-        ui.description.textContent = item ? 'Altere os dados e toque em “Salvar alterações”.' : 'Primeiro, escolha o tipo do item.';
-        ui.chooser.hidden = Boolean(item);
-        ui.editTypeWrapper.hidden = !item;
-        ui.form.hidden = !item;
-        ui.form.classList.toggle('item-fields--add', !item);
-        ui.delete.hidden = !item;
-        ui.save.textContent = item ? 'Salvar alterações' : 'Salvar item';
-        ui.choices.querySelectorAll('[data-type]').forEach(button => button.setAttribute('aria-pressed', 'false'));
-        if (item) {
-          ui.editType.value = item.type;
-          ui.name.value = item.name;
-          ui.brand.value = item.brand;
-          ui.quantityNew.value = item.quantityNew == null ? '' : numberFormat.format(item.quantityNew);
-          ui.quantityUsed.value = item.quantityUsed == null ? '' : numberFormat.format(item.quantityUsed);
-          ui.value.value = item.value == null ? '' : moneyFormat.format(item.value);
-          ui.name.focus({ preventScroll: true });
+        document.querySelector('body > header').inert=true;
+        document.querySelector('body > main').inert=true;
+        ui.title.textContent=item ? 'Editar item' : 'Adicionar novo item';
+        ui.description.textContent=item ? 'Altere os dados e toque em “Salvar alterações”.' : 'Primeiro, escolha o tipo do item.';
+        ui.chooser.hidden=Boolean(item);
+        ui.editTypeWrapper.hidden=!item;
+        ui.form.hidden=!item;
+        ui.form.classList.toggle('item-fields--add',!item);
+        ui.delete.hidden=!item;
+        ui.save.textContent=item ? 'Salvar alterações' : 'Salvar item';
+        ui.choices.querySelectorAll('[data-type]').forEach(button=>button.setAttribute('aria-pressed','false'));
+        if(item) {
+          ui.editType.value=item.type;
+          ui.name.value=item.name;
+          ui.quantityNew.value=item.quantityNew == null ? '' : numberFormat.format(item.quantityNew);
+          ui.quantityUsed.value=item.quantityUsed == null ? '' : numberFormat.format(item.quantityUsed);
+          ui.quantityRepair.value=item.quantityRepair == null ? '' : numberFormat.format(item.quantityRepair);
+          ui.priceNew.value=item.priceNew == null ? '' : moneyFormat.format(item.priceNew);
+          ui.priceUsed.value=item.priceUsed == null ? '' : moneyFormat.format(item.priceUsed);
+          ui.name.focus({preventScroll:true});
         } else {
-          ui.choices.querySelector('[data-type]').focus({ preventScroll: true });
+          ui.choices.querySelector('button[data-type]').focus({preventScroll:true});
         }
         refreshQuantityPreview();
       }
       function closeEditor() {
-        if (ui.overlay.hidden) return;
-        ui.overlay.hidden = true;
+        if(ui.overlay.hidden) return;
+        ui.overlay.hidden=true;
         document.body.classList.remove('modal-open');
-        document.querySelector('body > header').inert = false;
-        document.querySelector('body > main').inert = false;
+        document.querySelector('body > header').inert=false;
+        document.querySelector('body > main').inert=false;
         ui.form.reset();
-        ui.form.hidden = true;
-        ui.chooser.hidden = false;
-        selectedType = null;
-        editingId = null;
-        const target = priorFocus && priorFocus.isConnected ? priorFocus : ui.add;
-        priorFocus = null;
-        target.focus({ preventScroll: true });
+        ui.form.hidden=true;
+        ui.chooser.hidden=false;
+        editingId=null;
+        const target=priorFocus && priorFocus.isConnected ? priorFocus : ui.add;
+        priorFocus=null;
+        target.focus({preventScroll:true});
       }
-      ui.add.addEventListener('click', () => openEditor());
-      ui.close.addEventListener('click', closeEditor);
-      ui.cancel.addEventListener('click', closeEditor);
-      ui.quantityNew.addEventListener('input', refreshQuantityPreview);
-      ui.quantityUsed.addEventListener('input', refreshQuantityPreview);
-      ui.dismissMigration.addEventListener('click', () => {
-        try { localStorage.removeItem(MIGRATION_KEY); } catch (_) {}
-        ui.migration.hidden = true;
+      ui.add.addEventListener('click',()=>openEditor());
+      ui.close.addEventListener('click',closeEditor);
+      ui.cancel.addEventListener('click',closeEditor);
+      [ui.quantityNew,ui.quantityUsed,ui.quantityRepair].forEach(input=>input.addEventListener('input',refreshQuantityPreview));
+      ui.choices.addEventListener('click',event=>{
+        const button=event.target.closest('button[data-type]');
+        if(!button) return;
+        ui.editType.value=button.dataset.type;
+        ui.chooser.hidden=true;
+        ui.editTypeWrapper.hidden=false;
+        ui.form.hidden=false;
+        ui.description.textContent='Preencha os dados. Você pode mudar o tipo no primeiro campo.';
+        ui.name.focus({preventScroll:true});
       });
-      ui.choices.addEventListener('click', event => {
-        const button = event.target.closest('button[data-type]');
-        if (!button) return;
-        selectedType = button.dataset.type;
-        ui.editType.value = selectedType;
-        ui.chooser.hidden = true;
-        ui.editTypeWrapper.hidden = false;
-        ui.form.hidden = false;
-        ui.description.textContent = 'Preencha os dados. Você pode mudar o tipo no primeiro campo.';
-        ui.name.focus({ preventScroll: true });
+      document.addEventListener('keydown',event=>{
+        if(ui.overlay.hidden) return;
+        if(event.key==='Escape') {event.preventDefault();closeEditor();return;}
+        if(event.key!=='Tab') return;
+        const eligible=Array.from(ui.editor.querySelectorAll('button:not([disabled]),input:not([disabled]),select:not([disabled])'))
+          .filter(element=>!element.closest('[hidden]') && element.getClientRects().length);
+        if(!eligible.length) return;
+        const first=eligible[0],last=eligible[eligible.length-1];
+        if(event.shiftKey && document.activeElement===first) {event.preventDefault();last.focus();}
+        else if(!event.shiftKey && document.activeElement===last) {event.preventDefault();first.focus();}
       });
-      document.addEventListener('keydown', event => {
-        if (ui.overlay.hidden) return;
-        if (event.key === 'Escape') {
-          event.preventDefault();
-          closeEditor();
-          return;
-        }
-        if (event.key !== 'Tab') return;
-        const eligible = Array.from(ui.editor.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled])'))
-          .filter(element => !element.closest('[hidden]') && element.getClientRects().length);
-        if (!eligible.length) return;
-        const first = eligible[0], last = eligible[eligible.length - 1];
-        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-      });
-      ui.form.addEventListener('submit', event => {
+      ui.form.addEventListener('submit',event=>{
         event.preventDefault();
-        const type = ui.editType.value;
-        if (!TYPES.includes(type)) { showToast('Escolha o tipo do item.'); return; }
-        const name = ui.name.value.trim();
-        const brand = ui.brand.value.trim();
-        if (!name) { ui.name.focus(); showToast('Informe o nome do item.'); return; }
-        const newer = parseOptionalNumber(ui.quantityNew.value);
-        const used = parseOptionalNumber(ui.quantityUsed.value);
-        const val = parseOptionalNumber(ui.value.value);
-        if (!newer.ok) { ui.quantityNew.focus(); showToast('Quantidade de novos inválida.'); return; }
-        if (!used.ok) { ui.quantityUsed.focus(); showToast('Quantidade de usados inválida.'); return; }
-        if (!val.ok) { ui.value.focus(); showToast('Valor unitário inválido. Exemplo: 125,50'); return; }
-        const fields = { name, type, brand, quantityNew: newer.value, quantityUsed: used.value, value: val.value };
-        let message;
-        if (editingId) {
-          const item = items.find(record => record.id === editingId);
-          if (!item) { closeEditor(); render(); showToast('Este item já não existe.'); return; }
-          const modified = Object.entries(fields).some(([key, value]) => item[key] !== value);
-          if (modified) Object.assign(item, fields, { countDate: localDate() });
-          message = modified ? 'Alterações salvas!' : 'Nenhuma alteração necessária.';
-        } else {
-          items.unshift({ id: newId(), ...fields, countDate: localDate() });
-          ui.search.value = '';
-          message = 'Item adicionado e salvo!';
+        const type=ui.editType.value;
+        if(!TYPES.includes(type)){showToast('Escolha o tipo do item.');return;}
+        const name=ui.name.value.trim();
+        if(!name){ui.name.focus();showToast('Informe o nome do item.');return;}
+        const inputs=[
+          ['quantityNew',ui.quantityNew,'Quantidade de novos'],
+          ['quantityUsed',ui.quantityUsed,'Quantidade de usados'],
+          ['quantityRepair',ui.quantityRepair,'Quantidade de reforma pendente'],
+          ['priceNew',ui.priceNew,'Preço unitário novo'],
+          ['priceUsed',ui.priceUsed,'Preço unitário usado']
+        ];
+        const fields={name,type};
+        for(const [key,element,label] of inputs) {
+          const result=parseOptionalNumber(element.value);
+          if(!result.ok) {element.focus();showToast(`${label} inválido. Use número não negativo.`);return;}
+          fields[key]=result.value;
         }
-        const saved = persist();
+        let message;
+        if(editingId) {
+          const item=items.find(record=>record.id===editingId);
+          if(!item) {closeEditor();render();showToast('Este item já não existe.');return;}
+          const modified=Object.entries(fields).some(([key,val])=>item[key]!==val);
+          if(modified) Object.assign(item,fields,{countDate:localDate()});
+          message=modified ? 'Alterações salvas!' : 'Nenhuma alteração necessária.';
+        } else {
+          items.unshift({id:newId(),...fields,countDate:localDate()});
+          ui.search.value='';
+          message='Item adicionado e salvo!';
+        }
+        const saved=persist();
         closeEditor();
         render();
-        showToast(saved ? message : 'Alteração feita, mas não foi possível salvar.');
+        showToast(saved ? message : 'Alteração feita somente nesta tela; não foi salva no aparelho.');
       });
-      ui.delete.addEventListener('click', () => {
-        const item = items.find(record => record.id === editingId);
-        if (!item) return;
-        if (!confirm(`Excluir “${item.name}” do inventário? Essa ação não pode ser desfeita.`)) return;
-        items = items.filter(record => record.id !== editingId);
-        const saved = persist();
-        closeEditor();
-        render();
-        showToast(saved ? 'Item excluído.' : 'Item excluído, mas não foi possível salvar.');
+      ui.delete.addEventListener('click',()=>{
+        const item=items.find(record=>record.id===editingId);
+        if(!item)return;
+        if(!confirm(`Excluir “${item.name}” do inventário? Essa ação não pode ser desfeita.`))return;
+        items=items.filter(record=>record.id!==editingId);
+        const saved=persist();
+        closeEditor();render();
+        showToast(saved ? 'Item excluído.' : 'Item excluído apenas nesta tela; alteração não salva.');
       });
-      ui.search.addEventListener('input', render);
+      ui.search.addEventListener('input',render);
 
-      // Gerador de Excel .xlsx sem bibliotecas externas: arquivo ZIP com XML OpenXML.
-      const encoder = new TextEncoder();
+      // Planilha Excel OpenXML (.xlsx) sem bibliotecas externas.
+      const encoder=new TextEncoder();
       function xmlEscape(value) {
-        return String(value ?? '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '')
-          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+        return String(value ?? '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'')
+          .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/"/g,'&quot;').replace(/'/g,'&apos;');
       }
       function serialDate(date) {
-        const parts = date.split('-').map(Number);
-        return Math.round((Date.UTC(parts[0], parts[1] - 1, parts[2]) - Date.UTC(1899, 11, 30)) / 86400000);
+        const parts=date.split('-').map(Number);
+        return Math.round((Date.UTC(parts[0],parts[1]-1,parts[2])-Date.UTC(1899,11,30))/86400000);
       }
-      function stringCell(ref, text, style = 0) {
-        return `<c r="${ref}" s="${style}" t="inlineStr"><is><t xml:space="preserve">${xmlEscape(text)}</t></is></c>`;
+      function stringCell(ref,value,style=0) {
+        return `<c r="${ref}" s="${style}" t="inlineStr"><is><t xml:space="preserve">${xmlEscape(value)}</t></is></c>`;
       }
-      function numberCell(ref, value, style = 0) {
-        return value == null || !Number.isFinite(value) ? '' : `<c r="${ref}" s="${style}"><v>${value}</v></c>`;
+      function numberCell(ref,value,style=0) {
+        return value==null || !Number.isFinite(value) ? '' : `<c r="${ref}" s="${style}"><v>${value}</v></c>`;
+      }
+      function formulaCell(ref,formula,value,style=0) {
+        return `<c r="${ref}" s="${style}"><f>${xmlEscape(formula)}</f>${value == null ? '<v></v>' : `<v>${value}</v>`}</c>`;
       }
       function workbookFiles() {
-        const headers = [
-          'Data da contagem', 'Item', 'Tipo', 'Marca',
-          'Quantidade de novos', 'Quantidade de usados', 'Quantidade total',
-          'Valor unitário', 'Valor total'
+        const headers=[
+          'Data da contagem','Item','Tipo','Novos','Usados','Reforma pendente',
+          'Total bruto','Total funcionando','Valor unitário novo','Valor unitário usado',
+          'Valor total bruto','Valor total atual'
         ];
-        let rows = `<row r="1" ht="30" customHeight="1">${headers.map((header, index) => stringCell(`${'ABCDEFGHI'[index]}1`, header, 1)).join('')}</row>`;
-        items.forEach((item, index) => {
-          const row = index + 2;
-          const sum = quantityTotal(item);
-          const grandTotal = sum == null || item.value == null ? null : Math.round(sum * item.value * 100) / 100;
-          const formulaQty = `IF(COUNT(E${row}:F${row})=0,"",SUM(E${row}:F${row}))`;
-          const formulaValue = `IF(OR(G${row}="",H${row}=""),"",G${row}*H${row})`;
-          rows += `<row r="${row}">` +
-            numberCell(`A${row}`, serialDate(item.countDate), 2) +
-            stringCell(`B${row}`, item.name) +
-            stringCell(`C${row}`, item.type) +
-            stringCell(`D${row}`, item.brand) +
-            numberCell(`E${row}`, item.quantityNew, 4) +
-            numberCell(`F${row}`, item.quantityUsed, 4) +
-            `<c r="G${row}" s="4"><f>${formulaQty}</f><v>${sum == null ? '' : sum}</v></c>` +
-            numberCell(`H${row}`, item.value, 3) +
-            `<c r="I${row}" s="3"><f>${formulaValue}</f><v>${grandTotal == null ? '' : grandTotal}</v></c>` + '</row>';
+        const letters='ABCDEFGHIJKL';
+        let rows=`<row r="1" ht="32" customHeight="1">${headers.map((header,index)=>stringCell(`${letters[index]}1`,header,1)).join('')}</row>`;
+        items.forEach((item,index)=>{
+          const row=index+2;
+          const gross=quantityGross(item),active=quantityActive(item);
+          const grossValue=valueTotal(item,true),currentValue=valueTotal(item,false);
+          const formulaGrossQty=`IF(COUNT(D${row}:F${row})=0,"",SUM(D${row}:F${row}))`;
+          const formulaActiveQty=`IF(COUNT(D${row}:F${row})=0,"",SUM(D${row}:E${row}))`;
+          const formulaGrossValue=`IF(COUNT(D${row}:F${row})=0,"",IF(OR(AND(D${row}>0,I${row}=""),AND(SUM(E${row}:F${row})>0,J${row}="")),"",ROUND(D${row}*I${row}+(E${row}+F${row})*J${row},2)))`;
+          const formulaCurrentValue=`IF(COUNT(D${row}:F${row})=0,"",IF(OR(AND(D${row}>0,I${row}=""),AND(E${row}>0,J${row}="")),"",ROUND(D${row}*I${row}+E${row}*J${row},2)))`;
+          rows+=`<row r="${row}">`+
+            numberCell(`A${row}`,serialDate(item.countDate),2)+
+            stringCell(`B${row}`,item.name)+
+            stringCell(`C${row}`,item.type)+
+            numberCell(`D${row}`,item.quantityNew,4)+
+            numberCell(`E${row}`,item.quantityUsed,4)+
+            numberCell(`F${row}`,item.quantityRepair,4)+
+            formulaCell(`G${row}`,formulaGrossQty,gross,4)+
+            formulaCell(`H${row}`,formulaActiveQty,active,4)+
+            numberCell(`I${row}`,item.priceNew,3)+
+            numberCell(`J${row}`,item.priceUsed,3)+
+            formulaCell(`K${row}`,formulaGrossValue,grossValue,3)+
+            formulaCell(`L${row}`,formulaCurrentValue,currentValue,3)+'</row>';
         });
-        const end = Math.max(items.length + 1, 1);
-        const sheet = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
-          `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">` +
-          `<dimension ref="A1:I${end}"/>` +
-          `<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>` +
-          `<sheetFormatPr defaultRowHeight="19"/>` +
-          `<cols><col min="1" max="1" width="21" customWidth="1"/><col min="2" max="2" width="42" customWidth="1"/>` +
-          `<col min="3" max="3" width="18" customWidth="1"/><col min="4" max="4" width="25" customWidth="1"/>` +
-          `<col min="5" max="5" width="23" customWidth="1"/><col min="6" max="6" width="23" customWidth="1"/>` +
-          `<col min="7" max="7" width="22" customWidth="1"/><col min="8" max="8" width="22" customWidth="1"/>` +
-          `<col min="9" max="9" width="22" customWidth="1"/></cols>` +
-          `<sheetData>${rows}</sheetData><autoFilter ref="A1:I${end}"/></worksheet>`;
-        const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
-          `<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">` +
-          `<numFmts count="3"><numFmt numFmtId="164" formatCode="dd/mm/yyyy"/>` +
-          `<numFmt numFmtId="165" formatCode="&quot;R$&quot; #,##0.00"/>` +
-          `<numFmt numFmtId="166" formatCode="#,##0.###"/></numFmts>` +
-          `<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font>` +
-          `<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font></fonts>` +
-          `<fills count="3"><fill><patternFill patternType="none"/></fill>` +
-          `<fill><patternFill patternType="gray125"/></fill>` +
-          `<fill><patternFill patternType="solid"><fgColor rgb="FF203957"/><bgColor indexed="64"/></patternFill></fill></fills>` +
-          `<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>` +
-          `<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>` +
-          `<cellXfs count="5">` +
-          `<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>` +
-          `<xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/>` +
-          `<xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>` +
-          `<xf numFmtId="165" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>` +
-          `<xf numFmtId="166" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>` +
+        const end=Math.max(items.length+1,1);
+        const widths=[21,42,18,14,14,22,17,23,23,23,23,23];
+        const cols=widths.map((width,index)=>`<col min="${index+1}" max="${index+1}" width="${width}" customWidth="1"/>`).join('');
+        const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>`+
+          `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">`+
+          `<dimension ref="A1:L${end}"/>`+
+          `<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>`+
+          `<sheetFormatPr defaultRowHeight="19"/><cols>${cols}</cols>`+
+          `<sheetData>${rows}</sheetData><autoFilter ref="A1:L${end}"/></worksheet>`;
+        const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>`+
+          `<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">`+
+          `<numFmts count="3"><numFmt numFmtId="164" formatCode="dd/mm/yyyy"/>`+
+          `<numFmt numFmtId="165" formatCode="&quot;R$&quot; #,##0.00"/>`+
+          `<numFmt numFmtId="166" formatCode="#,##0.###"/></numFmts>`+
+          `<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font>`+
+          `<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font></fonts>`+
+          `<fills count="3"><fill><patternFill patternType="none"/></fill>`+
+          `<fill><patternFill patternType="gray125"/></fill>`+
+          `<fill><patternFill patternType="solid"><fgColor rgb="FF203957"/><bgColor indexed="64"/></patternFill></fill></fills>`+
+          `<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>`+
+          `<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>`+
+          `<cellXfs count="5">`+
+          `<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>`+
+          `<xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/>`+
+          `<xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>`+
+          `<xf numFmtId="165" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>`+
+          `<xf numFmtId="166" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>`+
           `</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
         return [
-          ['[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`],
-          ['_rels/.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
-          ['xl/workbook.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Inventário" sheetId="1" r:id="rId1"/></sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>`],
-          ['xl/_rels/workbook.xml.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
-          ['xl/styles.xml', styles],
-          ['xl/worksheets/sheet1.xml', sheet]
+          ['[Content_Types].xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`],
+          ['_rels/.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+          ['xl/workbook.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Inventário" sheetId="1" r:id="rId1"/></sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>`],
+          ['xl/_rels/workbook.xml.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
+          ['xl/styles.xml',styles],['xl/worksheets/sheet1.xml',sheet]
         ];
       }
       const crcTable = (() => {
@@ -780,31 +721,27 @@
         eocd.setUint32(16, offset, true);
         return new Blob([...localChunks, ...centralChunks, footer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       }
-      ui.download.addEventListener('click', () => {
+      ui.download.addEventListener('click',()=>{
         try {
-          const blob = zipFile(workbookFiles());
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `inventario_empreiteira_${localDate()}.xlsx`;
+          const blob=zipFile(workbookFiles());
+          const url=URL.createObjectURL(blob);
+          const link=document.createElement('a');
+          link.href=url;
+          link.download=`inventario_empreiteira_${localDate()}.xlsx`;
           document.body.appendChild(link);
           link.click();
           link.remove();
-          setTimeout(() => URL.revokeObjectURL(url), 4000);
+          setTimeout(()=>URL.revokeObjectURL(url),6000);
           showToast('Planilha Excel gerada!');
-        } catch (error) {
-          console.error('Erro ao exportar planilha:', error);
+        } catch(error) {
+          console.error('Erro ao exportar planilha:',error);
           showToast('Não foi possível gerar a planilha.');
         }
       });
-      window.addEventListener('storage', event => {
-        if (event.key === STORAGE_KEY) { items = load(); render(); showToast('Lista atualizada com alterações de outra aba.'); }
+      window.addEventListener('storage',event=>{
+        if(event.key===STORAGE_KEY) {items=load();render();showToast('Itens atualizados de outra aba.');}
       });
-      items = load();
-      if (didMigrate && persist()) {
-        try { localStorage.setItem(MIGRATION_KEY, '1'); } catch (_) {}
-      }
-      refreshMigrationNotice();
+      items=load();
       render();
     })();
   </script>
